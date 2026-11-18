@@ -14,7 +14,7 @@ import glob, os, sys
 import yara
 
 here = os.path.dirname(os.path.abspath(__file__))
-roots = [os.environ.get('SSF_RULES', ''), os.path.join(here, '..', '..', 'rules'), os.path.join(here, '..', 'rules'), '/home/claude/scanners']
+roots = [os.environ.get('SSF_RULES', ''), os.path.join(here, '..', '..', 'rules'), os.path.join(here, '..', 'rules')]
 files = []
 for r in roots:
     if not r or not os.path.isdir(r):
