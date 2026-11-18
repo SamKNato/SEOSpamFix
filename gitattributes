@@ -1,0 +1,10 @@
+# Keep Unix line endings everywhere. The build script and the PHP tool run on Linux servers,
+# and Windows line endings break shell scripts ("bad interpreter") and can upset some hosts.
+* text=auto eol=lf
+
+# Never touch binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
