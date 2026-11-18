@@ -16,6 +16,13 @@ to paste into an AI coding tool.
 
 ![Overview](docs/overview.png)
 
+## Download
+
+Get `seo-spam-fix.php` from the
+[latest release](https://github.com/SamKNato/SEOSpamFix/releases/latest).
+That single file is all you upload; the rest of this repository is the source
+and the build tools.
+
 ## What it checks
 
 ### Infection
@@ -136,7 +143,7 @@ what was skipped.
 
 The release file is built from the parts in `src/`:
 
-    ./build.sh          # writes seo-spam-fix.php and syntax-checks it
+    sh build.sh         # writes seo-spam-fix.php and syntax-checks it
 
 | File | Contents |
 |---|---|
@@ -173,8 +180,9 @@ and one hand-built site) under `/home/ssftest`. Run it as root in a throwaway
 container, never on a real server, then scan it and check that expected
 findings appear and that `safe.php` produces none.
 
-When reporting a false alarm or a miss, include the finding title and the
-line that matched (with secrets removed).
+Report false alarms, misses and files deleted by a host scanner in
+[Issues](https://github.com/SamKNato/SEOSpamFix/issues). Include the finding
+title and the line that matched, with any secrets removed.
 
 ## Licence
 
