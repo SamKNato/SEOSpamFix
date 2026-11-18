@@ -23,6 +23,26 @@ Get `seo-spam-fix.php` from the
 That single file is all you upload; the rest of this repository is the source
 and the build tools.
 
+**Download a fresh copy for every job.** The tool is updated regularly with new
+detection rules and fixes, so an old copy misses newer threats. Never reuse a
+copy you find already sitting on a server: you cannot know whether someone
+changed it.
+
+### Check that your copy is genuine
+
+Each release lists the SHA-256 checksum of `seo-spam-fix.php` and includes it
+as `seo-spam-fix.php.sha256`. Compare it with your download before uploading:
+
+| System | Command |
+|---|---|
+| Windows (PowerShell) | `Get-FileHash .\seo-spam-fix.php -Algorithm SHA256` |
+| Windows (Command Prompt) | `certutil -hashfile seo-spam-fix.php SHA256` |
+| macOS | `shasum -a 256 seo-spam-fix.php` |
+| Linux | `sha256sum seo-spam-fix.php` |
+
+If the result differs from the release, do not use the file. Check it before
+you set the password, since editing the file changes the checksum.
+
 ## What it checks
 
 ### Infection
@@ -106,6 +126,34 @@ but a host's own commercial rules can still disagree. If it happens:
 Do not rename it to something innocent-looking to get past the scanner; that
 is what malware does, and it teaches nothing.
 
+## Why it stops working after 7 days
+
+Once uploaded, the tool is a password-protected panel that can read every file
+in the hosting account and move files around. A copy that is forgotten on the
+server after the job is something an attacker can find and try passwords
+against. So the web interface locks itself 7 days after the file was uploaded,
+even if nobody remembers to delete it.
+
+- **To keep using it, upload a fresh copy** (from the latest release), set the
+  password again, and you get another 7 days. Re-uploading over the old file
+  works too.
+- **Nothing is lost.** Scan results and quarantined items are kept in
+  `ssf-data` in the account home, not in the tool file. A fresh copy shows the
+  earlier quarantine runs and can still restore them.
+- **If it says it has locked itself right after uploading:** the upload kept
+  the file's original date instead of the upload time. This happens with FTP
+  clients set to preserve timestamps, or when extracting a zip on the server.
+  Upload the plain `.php` file with cPanel File Manager, or open it in the
+  cPanel editor and save it once (which you do anyway to set the password).
+- **The period is adjustable** with `SSF_EXPIRE_DAYS` at the top of the file.
+  Shorter is safer.
+
+The expiry is a safety net, not a lock against attackers. Someone who can
+already edit files in the account could change the tool and remove the check.
+That is why you should download fresh, verify the checksum, and **delete the
+tool when you finish** with "This tool > Delete this tool". The expiry only
+covers the times you forget.
+
 ## How it protects itself
 
 - No default password; locks for 15 minutes after 6 wrong attempts.
@@ -179,6 +227,11 @@ Most new checks are one row in a rule table. Each code rule has a pattern, a
 and one hand-built site) under `/home/ssftest`. Run it as root in a throwaway
 container, never on a real server, then scan it and check that expected
 findings appear and that `safe.php` produces none.
+
+To publish a release: run `sh build.sh`, which prints the checksum and writes
+`seo-spam-fix.php.sha256`. Create a GitHub release tagged with the version,
+attach both files, and paste the checksum and the matching `CHANGELOG.md`
+section into the release notes.
 
 Report false alarms, misses and files deleted by a host scanner in
 [Issues](https://github.com/SamKNato/SEOSpamFix/issues). Include the finding
